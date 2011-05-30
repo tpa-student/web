@@ -40,9 +40,17 @@ public class LoginController implements Serializable {
 			ModelMap modelMap, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (authenticator.authenticate(credentials)) {
+			request.getSession(true).setAttribute("user", authenticator.getUser());
 			return showLoginSuccess(modelMap);
 		}
 		return showLoginFailure(modelMap);
+	}
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(@Valid Credentials credentials, BindingResult result,
+			ModelMap modelMap, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+			request.getSession(true).removeAttribute("user");
+			return "login/success";
 	}
 
 	@RequestMapping(value = "/login/success", method = RequestMethod.GET)
